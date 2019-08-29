@@ -1,0 +1,28 @@
+{
+  "name": "nodejs-lessons-restapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "save": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EsterfanoLopes/nodejs-lessons-restapi.git"
+  },
+  "author": "Esterfano Lopes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EsterfanoLopes/nodejs-lessons-restapi/issues"
+  },
+  "homepage": "https://github.com/EsterfanoLopes/nodejs-lessons-restapi#readme"
+}
