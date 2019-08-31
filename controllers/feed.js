@@ -180,7 +180,7 @@ exports.deletePost = (req, res, next) => {
     }).then(user => {
       user.posts.pull(postId);
       return user.save();
-    ).then(result => {
+    }).then(result => {
       console.log(result);
       res.status(200).json({ message: 'Deleted post.' });
     }).catch(err => {
