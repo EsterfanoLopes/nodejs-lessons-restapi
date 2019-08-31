@@ -24,7 +24,7 @@ exports.getPosts = async (req, res, next) => {
   try {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find()
-      .populate('creator')
+      // .populate('creator')
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -164,7 +164,7 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (post.crator.toString() !== req.userId) {
+      if (!post.creator || post.creator.toString() !== req.userId) {
         const error = new Error('Not authorized!');
         error.statusCode = 401;
         throw error;
