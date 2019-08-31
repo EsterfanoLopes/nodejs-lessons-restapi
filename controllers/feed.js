@@ -17,32 +17,27 @@ const clearImage = filePath => {
   });
 };
 
-exports.getPosts = (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = parseInt(envvars.ITEMS_PER_PAGE, 10);
   let totalItems;
-  Post.find()
-    .countDocuments()
-    .then(count => {
-      totalItems = count;
-      return Post
-        .find()
-        .skip((currentPage - 1) * perPage)
-        .limit(perPage);
-    }).then(posts => {
-      res
-        .status(200)
-        .json({
-          message: 'Fetched posts successfully',
-          posts,
-          totalItems
-        });
-    }).catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+  try {
+    const totalItems = await Post.find().countDocuments();
+    const posts = await Post.find()
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
+
+    res.status(200).json({
+      message: 'Fetched posts successfully',
+      posts,
+      totalItems,
     });
+  } catch(error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
 };
 
 exports.createPost = (req, res, next) => {
