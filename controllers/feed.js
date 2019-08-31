@@ -2,8 +2,12 @@ const fs = require('fs');
 const path = require('path');
 
 const { validationResult } = require('express-validator/check');
+const dotenv = require('dotenv');
 
 const Post = require('../models/post');
+
+dotenv.config();
+const envvars = process.env;
 
 const clearImage = filePath => {
   filePath = path.join(__dirname, '..', filePath);
@@ -14,7 +18,7 @@ const clearImage = filePath => {
 
 exports.getPosts = (req, res, next) => {
   const currentPage = req.query.page || 1;
-  const perPage = 2;
+  const perPage = parseInt(envvars.ITEMS_PER_PAGE, 10);
   let totalItems;
   Post.find()
     .countDocuments()
