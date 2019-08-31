@@ -4,7 +4,7 @@ services:
         ports:
             - 4000:4000
             - 9222:9222
-        image: node:12.10-alpine
+        image: node:12.9-alpine
         container_name: udemy_nodecourse
         working_dir: /home/node/app
         environment:
