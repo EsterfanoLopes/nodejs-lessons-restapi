@@ -75,7 +75,7 @@ exports.createPost = (req, res, next) => {
         action: 'create',
         post: {
           ...post._doc,
-          creator: { _id: req.userId, name: user.name },
+          creator: { _id: req.userId, name: result.name },
         },
       });
       res.status(201).json({
@@ -132,14 +132,14 @@ exports.updatePost = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
-  Post.findById(postId)
+  Post.findById(postId).populate('creator')
     .then(post => {
       if (!post) {
         const error = new Error('Could not find Post');
         error.statusCode = 404;
         throw error;
       }
-      if (post.crator.toString() !== req.userId) {
+      if (post.crator._id.toString() !== req.userId) {
         const error = new Error('Not authorized!');
         error.statusCode = 401;
         throw error;
@@ -153,6 +153,10 @@ exports.updatePost = (req, res, next) => {
       post.save();
     })
     .then(result => {
+      io.getIo().emit('posts', {
+        action: 'update',
+        post: result,
+      })
       res.status(200).json({ message: 'Post updated!', post: result });
     })
     .catch(err => {
