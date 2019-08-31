@@ -49,8 +49,8 @@ app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
-  const { statusCode, message } = error;
-  res.status(statusCode).json({ message });
+  const { statusCode, message, data } = error;
+  res.status(statusCode).json({ message, data });
 });
 
 dotenv.config();
