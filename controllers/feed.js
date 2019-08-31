@@ -34,7 +34,7 @@ exports.getPosts = async (req, res, next) => {
       posts,
       totalItems,
     });
-  } catch(error) {
+  } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
@@ -72,8 +72,11 @@ exports.createPost = (req, res, next) => {
       return user.save();
     }).then(result => {
       io.getIo().emit('posts', {
-        action: 'create'.
-        post
+        action: 'create',
+        post: {
+          ...post._doc,
+          creator: { _id: req.userId, name: user.name },
+        },
       });
       res.status(201).json({
         message: 'Post created successfuly',
