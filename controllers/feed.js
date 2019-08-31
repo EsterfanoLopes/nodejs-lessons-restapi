@@ -4,6 +4,7 @@ const path = require('path');
 const { validationResult } = require('express-validator/check');
 const dotenv = require('dotenv');
 
+const io = require('../socket');
 const Post = require('../models/post');
 const User = require('../models/user');
 
@@ -70,6 +71,10 @@ exports.createPost = (req, res, next) => {
       user.posts.push(post);
       return user.save();
     }).then(result => {
+      io.getIo().emit('posts', {
+        action: 'create'.
+        post
+      });
       res.status(201).json({
         message: 'Post created successfuly',
         post,
