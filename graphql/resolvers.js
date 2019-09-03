@@ -4,6 +4,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const Post = require('../models/post');
 
 dotenv.config();
 const envvars = process.env;
@@ -31,7 +32,7 @@ module.exports = {
     }
 
     const hashedPassword = await bcrypt.hash(password, parseInt(envvars.ENCRYPT_ROUNDS));
-    
+
     const user = new User({ email, name, password: hashedPassword });
     const createdUser = await user.save();
     return { ...createdUser._doc, _id: createdUser._id.toString() };
@@ -48,5 +49,39 @@ module.exports = {
       email: user.email
     }, envvars.JWT_SECRET_WORD.toString(), { expiresIn: '1h' });
     return { token, userId: user._id.toString() };
+  },
+  createPost: async ({ postInput }, req) => {
+    const errors = [];
+    if (
+      validator.isEmpty(postInput.title) ||
+      !validator.isLength(postInput.title, { min: 5 })
+    ) {
+      errors.push({ message: 'Title is invalid.' });
+    }
+    if (
+      validator.isEmpty(postInput.content) ||
+      !validator.isLength(postInput.content, { min: 5 })
+    ) {
+      errors.push({ message: 'Content is invalid.' });
+    }
+    if (errors.length > 0) {
+      const error = new Error('Invalid input.');
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    const { title, content, imageUrl } = postInput;
+    const post = new Post({
+      title,
+      content,
+      imageUrl,
+    });
+    const createdPost = await post.save();
+    return {
+      ...createdPost._doc,
+      _id: createdPost._id.toString(),
+      createdAt: createdPost.creeatedAt.toISOString(),
+      updatedAt: createdPost.updatedAt.toISOString(),
+    };
   }
 };
