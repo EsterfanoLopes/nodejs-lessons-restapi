@@ -46,7 +46,7 @@ module.exports = {
     const token = jwt.sign({
       userId: user._id.toString(),
       email: user.email
-    }, envvars.kawabangaXablau.toString(), { expiresIn: '1h' });
+    }, envvars.JWT_SECRET_WORD.toString(), { expiresIn: '1h' });
     return { token, userId: user._id.toString() };
   }
 };
