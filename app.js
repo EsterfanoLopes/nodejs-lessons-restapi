@@ -1,5 +1,4 @@
 const path = require('path');
-const fs = require('fs');
 
 const express = require('express');
 const dotenv = require('dotenv');
@@ -11,6 +10,7 @@ const graphQlHttp = require('express-graphql');
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth');
+const { clearImage } = require('./util/file');
 
 const app = express();
 
@@ -49,13 +49,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-const clearImage = filePath => {
-  filePath = path.join(__dirname, '..', filePath);
-  fs.unlink(filePath, err => {
-    console.log(err);
-  });
-};
 
 app.use(auth);
 
