@@ -11,13 +11,6 @@ const User = require('../models/user');
 dotenv.config();
 const envvars = process.env;
 
-const clearImage = filePath => {
-  filePath = path.join(__dirname, '..', filePath);
-  fs.unlink(filePath, err => {
-    console.log(err);
-  });
-};
-
 exports.getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = parseInt(envvars.ITEMS_PER_PAGE, 10);
