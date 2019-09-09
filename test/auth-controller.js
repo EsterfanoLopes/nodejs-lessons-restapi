@@ -41,8 +41,24 @@ describe('Auth Controller - Login', function () {
           password: 'tester',
           name: 'Test',
           posts: [],
+          _id: '5c0f66b979af55031b34728a',
         });
         user.save();
-      }).then(() => {}).catch(err => console.log(err));
+      }).then(() => {
+        const req = { userId: '5c0f66b979af55031b34728a' };
+        const res = {
+          statusCode: 500,
+          userStatus: null,
+          status: (code) => {
+            this.statusCode = code;
+            return this;
+          },
+          json: (data) => this.userStatus = data.status,
+        };
+        AuthController.getUserStatus(req, res, () => {}).then(() => {
+          expect(res.statusCode).to.be.equal(500);
+          done();
+        });
+      }).catch(err => console.log(err));
   });
 });
