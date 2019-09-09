@@ -55,9 +55,14 @@ describe('Auth Controller - Login', function () {
           },
           json: (data) => this.userStatus = data.status,
         };
-        AuthController.getUserStatus(req, res, () => {}).then(() => {
+        AuthController.getUserStatus(req, res, () => { }).then(() => {
           expect(res.statusCode).to.be.equal(500);
-          done();
+          User.deleteMany({})
+            .then(() => {
+              return mongoose.disconnect();
+            }).then(() => {
+              done();
+            });
         });
       }).catch(err => console.log(err));
   });
